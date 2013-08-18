@@ -1,16 +1,12 @@
 window.addEventListener( 'resize', onWindowResize, false );
-
 function onWindowResize(){
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
+    }
 
 //Declare standard threejs variables
-            
+
     var renderer = new THREE.WebGLRenderer( {antialias: true} );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.sortObjects = false;
@@ -18,9 +14,9 @@ function onWindowResize(){
     var scene;
     var camera;
     var clock = new THREE.Clock();
-            
+
 //Declare custom global variables
-            
+
     var rifter;
     var roty = 0;
     var rotx = 0;
@@ -31,19 +27,19 @@ function onWindowResize(){
     var rifterspeed;
     var enemy;
     var threexSparks;
-            
+
 //setup scene
-            
+
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 20000 );
-            
+
 //Load up the rifter model from json export
-            
+
     var loader = new THREE.JSONLoader();
     loader.load("assets/rifter4.js", addModelToScene);
-            
+
 //Add rifter to the scene using "addModelToScene" function
-            
+
     function addModelToScene(geometry, materials){
         var material = new THREE.MeshFaceMaterial(materials);
         rifter = new THREE.Mesh(geometry, material);
@@ -52,13 +48,13 @@ function onWindowResize(){
         scene.add(rifter);
         animate();         
         };
-                
+
 //set rifter speed
-            
+
     var rifterspeed = 1;
 
 //Light it up.
-            
+
     var spotLight = new THREE.SpotLight( 0xffffff, 1 );
     spotLight.position.set( 0, 10000, -1500 );
     spotLight.castShadow = true;
@@ -70,9 +66,9 @@ function onWindowResize(){
     scene.add( spotLight );
     var light = new THREE.AmbientLight( 0x404040 ); // soft white light
     scene.add( light );
-            
+
 //Make a floor, yo.
-            
+
     loader.load("assets/island.js", addTerrainToScene);
     function addTerrainToScene(geometry, materials){
         var floorTexture = new THREE.ImageUtils.loadTexture( 'assets/grass.png' );
@@ -84,7 +80,7 @@ function onWindowResize(){
         floor.rotation.set(0,Math.PI,0);
         scene.add(floor);          
         };
-    
+
     var groundTexture = new THREE.ImageUtils.loadTexture( 'assets/grass.png' );
     groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping; 
     groundTexture.repeat.set( 10, 10 );
@@ -94,9 +90,9 @@ function onWindowResize(){
     ground.position.y = -150;
     ground.rotation.x = Math.PI / 2;
     scene.add(ground);
-            
+
 //just add water..
-            
+
     var waterTexture = new THREE.ImageUtils.loadTexture( 'assets/water.png' );
     waterTexture.wrapS = waterTexture.wrapT = THREE.RepeatWrapping; 
     waterTexture.repeat.set( 10, 10 );
@@ -106,9 +102,9 @@ function onWindowResize(){
     water.position.y = -100;
     water.rotation.x = Math.PI / 2;
     scene.add(water);
-            
+
 //Load reticule images for targeting rings
-            
+
     var lilring = THREE.ImageUtils.loadTexture( 'assets/lilringnew.png' );
     var targliltex = new THREE.MeshBasicMaterial( { map: lilring, transparent: true, opacity: 0.7  } );
     targliltex.side = THREE.DoubleSide;
@@ -117,7 +113,7 @@ function onWindowResize(){
     targring2.scale.set( 1, 1, 1 );
     targring2.position.set(0,0,0);
     scene.add( targring2 );
-            
+
     var bigring = THREE.ImageUtils.loadTexture( 'assets/bigringnew.png' );
     var targbigtex = new THREE.MeshBasicMaterial( { map: bigring, transparent: true, opacity: 0.7  } );
     targbigtex.side = THREE.DoubleSide;
@@ -126,9 +122,9 @@ function onWindowResize(){
     targring1.scale.set( 2, 2, 2 );
     targring1.position.set(0,0,0);
     scene.add( targring1 );
- 
+
 //Make dat sky, dog.
-            
+
     var skyBoxGeometry = new THREE.SphereGeometry( 10000, 35, 35 );
     var skyTexture = new THREE.ImageUtils.loadTexture( 'assets/sky.jpg' );
     skyTexture.wrapS = skyTexture.wrapT = THREE.RepeatWrapping; 
@@ -136,9 +132,9 @@ function onWindowResize(){
     var skyBoxMaterial = new THREE.MeshBasicMaterial( { map:skyTexture, side: THREE.BackSide } );
     var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
     scene.add(skyBox);
-                
+
 //Load the enemy
-            
+
     loader.load("assets/enemy.js", addEnemyToScene);
     function addEnemyToScene(geometry, materials){
         var material = new THREE.MeshFaceMaterial(materials);
@@ -150,32 +146,32 @@ function onWindowResize(){
         };
       
 //load thrust glow (or don't, whatever)
-            
+
     var thrustglow = new THREE.PointLight( 0xff7301 );
     scene.add(thrustglow);
-            
+
 //load thrust particles
 
 
 //Animate function which calls update and render
 //as well as recalling animate to make persistent
-            
+
     function animate(){
         requestAnimationFrame(animate); 
         update();
         render();
     }
-            
+
     function update() {
-            
+ 
 //Set speed/rotation vars
     var wobble = 0;
     var delta = clock.getDelta();
     console.log(delta);
-            
+ 
 //Setting up keypress to increasing
 //and decelerating rotation functions
-            
+
     if(pressedl == 1){rotz -= 0.002/(delta^2)};
     if(pressedu == 1){rotx += 0.001/(delta^2 / 1.2)};
     if(pressedr == 1){rotz += 0.002/(delta^2)};
@@ -189,7 +185,7 @@ function onWindowResize(){
     if(pressedshift == 0){rifterspeed -= 0.02};
             
 //Set limits on rotation and velocity
-            
+ 
     if (rotz<=-0.075){rotz=-0.075};
     if (rotz>=0.075){rotz=0.075};
     if (rotx<-0.05){rotx=-0.05};
@@ -229,7 +225,7 @@ function onWindowResize(){
             
     camChaser.position.x = chaserOffset.x + wobble;
     camChaser.position.y = chaserOffset.y + wobble;
-    camChaser.position.z = chaserOffset.z;
+    camChaser.position.z = chaserOffset.z + wobble;
             
     var relCamOffset = new THREE.Vector3(0,-25 * rotx/2 * cockpit + 0.4,-10 * rifterspeed/4 * rearview * cockpit);
     //var relCamOffset = new THREE.Vector3(0,5,-5 * rearview * cockpit); // debug camera
@@ -274,8 +270,7 @@ function onWindowResize(){
     thrustglow.position.z = ThrustOffset.z;
     thrustglow.intensity = rifterspeed/2;
     };
-            
-            
+       
     function render() {
     renderer.render(scene, camera);
     }
