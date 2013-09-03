@@ -11,7 +11,8 @@ window.onkeyup = Up
     var pressedd = 0;
     var pressedshift = 0;
     var pressedpgdn = 0;
-    var pressedpgup = 0
+    var pressedpgup = 0;
+    var pressedspc = 0;
 
     function Down(e) { 
         cxc = e.keyCode;
@@ -29,6 +30,8 @@ window.onkeyup = Up
             pressedpgdn = 1;
         if(cxc == 33)
             pressedpgup = 1;
+        if(cxc == 32)
+            pressedspc = 1;
         //alert(cxc);
         }
     function Up(e) {
@@ -47,6 +50,8 @@ window.onkeyup = Up
             pressedpgdn = 0;
         if(cxc == 33)
             pressedpgup = 0;
+        if(cxc == 32)
+            pressedspc = 0;
         //alert(cxc)
         //^uncomment to test keypresses
         }
