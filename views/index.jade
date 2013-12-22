@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  script(src='/javascripts/three.js').
+  script(src='/javascripts/rifter.js').
+  #loadcontainer
+    #loadbar
+    h1#loadingtext Loading...
+    p#currentfile
+  #statushud
+    img#heatstatus(src='/assets/heatok.png')
+    #thrustbar
+        img#thruststatus(src='/assets/thrustbar.png')
