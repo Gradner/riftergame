@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var extend = function(subClass, superClass) {
     /*
     Extend Function
@@ -26,6 +27,10 @@ var RIFTER_URL = "assets/rifter4.js";
 var canShoot = true;
 
 var meshes = {};
+=======
+//Preload assets
+
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
     var queue = new createjs.LoadQueue(true);
     queue.addEventListener("progress", handleProgress);
     queue.addEventListener("fileprogress", handleFileLoad);
@@ -79,6 +84,11 @@ function init(){
     var clock = new THREE.Clock();
 
 //Declare custom global variables
+<<<<<<< HEAD
+=======
+
+    var rifter;
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
     var roty = 0;
     var rotx = 0;
     var rotz = 0;
@@ -101,6 +111,7 @@ function init(){
     //Load up the rifter model from json export
 
         var loader = new THREE.JSONLoader();
+<<<<<<< HEAD
 
     //Add rifter to the scene using "addModelToScene" function
     var rifter = new Ship(scene, loader, RIFTER_URL, {
@@ -109,6 +120,24 @@ function init(){
         maxSpeed: 2,
         scale: {x:1.5, y:1.5, z:1.5}
     });
+=======
+        loader.load("assets/rifter4.js", addModelToScene);
+
+    //Add rifter to the scene using "addModelToScene" function
+
+        function addModelToScene(geometry, materials){
+            var material = new THREE.MeshFaceMaterial(materials);
+            rifter = new THREE.Mesh(geometry, material);
+            rifter.scale.set(1.5,1.5,1.5);
+            rifter.rotation.set(0,Math.PI,0);
+            scene.add(rifter);
+            animate();         
+            };
+
+    //set rifter speed
+
+        var rifterspeed = 2;
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
 
     //Light it up.
 
@@ -184,7 +213,11 @@ function init(){
             // position values, -250 -> 250
                 var pX = (Math.random() - 0.5) * 0.1,
                     pY = (Math.random() - 0.5) * 0.1,
+<<<<<<< HEAD
                     pZ = Math.random() * (1.5 * rifter.speed/2),
+=======
+                    pZ = Math.random() * (1.5 * rifterspeed/2),
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
                 particle = new THREE.Vector3(pX, pY, pZ);
             // create a velocity vector
                 particle.velocity = new THREE.Vector3( 0, Math.random(), 0);   
@@ -256,7 +289,11 @@ function init(){
         
 
     //missile creator
+<<<<<<< HEAD
     /*
+=======
+    
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
         function newMissile(orig){
             loader.load("assets/rocket.js", addMissileToScene);
             function addMissileToScene(geometry, materials){
@@ -268,7 +305,11 @@ function init(){
                 missile._lifetime = 0;
                 };       
             };
+<<<<<<< HEAD
     */      
+=======
+            
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
     //Animate function which calls update and render
     //as well as recalling animate to make persistent
 
@@ -278,6 +319,7 @@ function init(){
             render();
     }
 
+<<<<<<< HEAD
     function update(){    
 
         rifter.update();    
@@ -381,18 +423,131 @@ function init(){
         if (rifter.speed>=3.5){rifter.speed=3.5};
         if (rifter.speed<=2){rifter.speed=2};
         if (rifter.speed>2){wobble = Math.random()*(rifter.speed/3)/10;}
+=======
+    function update(){
+        
+            //missiles
+            
+            //update particles
+            particleSystem.rotation.z += 0.1;
+            particleSystem.rotation.y = rifter.rotation.y - Math.PI;
+            particleSystem.rotation.x = rifter.rotation.x;
+            particleSystem.position = rifter.position
+            
+            var pCount = particleCount;
+                while(pCount--) {
+
+                    // get the particle
+                    var particle = particles.vertices[pCount];
+                    particle.z += 0.1
+                    // particle conditions
+                    if(particle.x > 0 && particle.z > (1 * rifterspeed/2)){
+                        particle.x -= 0.005
+                    }
+                    if(particle.x < 0 && particle.z > (1 * rifterspeed/2)){
+                        particle.x += 0.005
+                    }
+                    
+                    if(particle.y > 0 && particle.z > (1 * rifterspeed/2)){
+                        particle.y -= 0.005
+                    }
+                    if(particle.y < 0 && particle.z > (1 * rifterspeed/2)){
+                        particle.y += 0.005
+                    }
+                    
+                    if(particle.z > (1.5 - Math.random()) * rifterspeed/2) {
+                    particle.z = 0;
+                    particle.x = (Math.random() - 0.5) * 0.1;
+                    particle.y = (Math.random() - 0.5) * 0.1;
+                    }
+                }
+
+            // flag to the particle system
+            // that we've changed its vertices.
+            
+            particleSystem.geometry.__dirtyVertices = true;
+            
+        //Set speed/rotation vars
+            
+            var wobble = 0;
+            var delta = clock.getDelta();
+            
+            $('#thruststatus').width($('#thrustbar').width() * overheat/150);
+            
+            if(overheat<75 && enginestatus != 1 && overheated == 0){
+                $('#heatstatus').attr('src', '/assets/heatok.png');
+                enginestatus = 1;
+            }
+            if(overheat>75 && enginestatus != 2 && enginestatus != 3){
+                $('#heatstatus').attr('src', '/assets/heatbad.png');
+                enginestatus = 2;
+            }
+            if(overheat == 150){
+                overheated = 1;
+            }
+            if(overheated == 1 && enginestatus != 3){
+                $('#heatstatus').attr('src', '/assets/overheat.png');
+                enginestatus = 3;
+            };
+
+
+            
+        //Setting up keypress to increasing
+        //and decelerating rotation functions
+
+            if(pressedl == 1){rotz -= 0.002/(delta^2)};
+            if(pressedu == 1){rotx += 0.001/(delta^2 /1.2)};
+            if(pressedr == 1){rotz += 0.002/(delta^2)};
+            if(pressedd == 1){rotx -= 0.001/(delta^2 /1.2)};
+            if(pressedshift == 1){
+                if(overheated == 0){
+                    rifterspeed += 0.01;
+                    overheat += 0.25;
+                } else {
+                    rifterspeed -= 0.02;
+                    overheat -= 0.5}};
+
+            if(pressedl == 0){ if(rotz.toFixed(10)<0){rotz += 0.001}};
+            if(pressedu == 0){ if(rotx.toFixed(10)>0){rotx -= 0.001}};
+            if(pressedr == 0){ if(rotz.toFixed(10)>0){rotz -= 0.001}};
+            if(pressedd == 0){ if(rotx.toFixed(10)<0){rotx += 0.001}};
+            if(pressedshift == 0){
+                rifterspeed -= 0.02;
+                if(overheat>0){overheat -= 0.5}
+                };
+            if(overheat == 0){
+                overheated = 0;
+                }
+                
+        //Set limits on rotation and velocity
+
+            if (rotz<=-0.08){rotz=-0.08};
+            if (rotz>=0.08){rotz=0.08};
+            if (rotx<-0.05){rotx=-0.05};
+            if (rotx>0.05){rotx=0.05};
+            if (rifterspeed>=3.5){rifterspeed=3.5};
+            if (rifterspeed<=2){rifterspeed=2};
+            if (rifterspeed>2){wobble = Math.random()*(rifterspeed/3)/10;}
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
 
         //Set rifter movement to rifter speed
         //and rifter rotation to rifter rot
 
+<<<<<<< HEAD
         rifter.mesh.rotateOnAxis(new THREE.Vector3(0,0,1), rotz);
         rifter.mesh.rotateOnAxis(new THREE.Vector3(1,0,0), rotx);
+=======
+            rifter.rotateOnAxis(new THREE.Vector3(0,0,1), rotz);
+            rifter.rotateOnAxis(new THREE.Vector3(1,0,0), rotx);
+            rifter.translateZ(rifterspeed);
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
 
         //Move enemy to camera position (spot behind rifter to line up shot)
 
         if(enemy){
             enemy.translateZ(1.5);
             enemy.lookAt(camera.position);
+<<<<<<< HEAD
         }
 
         //Enable rearview cam
@@ -424,11 +579,45 @@ function init(){
         camera.position.y = cameraOffset.y;
         camera.position.z = cameraOffset.z;
         camera.lookAt(camChaser.position);
+=======
+            };
+
+        //Enable rearview cam
+
+            var rearview;
+            if(pressedpgdn == 1){rearview = -1};
+            if(pressedpgdn == 0){rearview = 1};
+
+        //Enable cockpit cam
+
+            var cockpit;
+            if(pressedpgup == 1){cockpit = -0.125};
+            if(pressedpgup == 0){cockpit = 1};
+
+        //Chase Camera Setup
+
+            var camChaserOffset = new THREE.Vector3(0,-50 * rotx * cockpit + 1,10 * rearview);
+            var chaserOffset = camChaserOffset.applyMatrix4(rifter.matrixWorld);
+
+            camChaser.position.x = chaserOffset.x + wobble;
+            camChaser.position.y = chaserOffset.y + wobble;
+            camChaser.position.z = chaserOffset.z + wobble;
+
+            var relCamOffset = new THREE.Vector3(0,-25 * rotx/2 * cockpit + 1,-5 * rifterspeed/4 * rearview * cockpit);
+            //var relCamOffset = new THREE.Vector3(0,5,-5 * rearview * cockpit); // debug camera
+            var cameraOffset = relCamOffset.applyMatrix4(rifter.matrixWorld);
+
+            camera.position.x = cameraOffset.x;
+            camera.position.y = cameraOffset.y;
+            camera.position.z = cameraOffset.z;
+            camera.lookAt(camChaser.position);
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
 
         //Create offsets for targeting reticule
         //and set reticule positions relative to
         //rifter position and rotation
 
+<<<<<<< HEAD
         var relTar1Offset = new THREE.Vector3(0,-10 * rotx * 4,40);
         var Targ1Offset = relTar1Offset.applyMatrix4(rifter.mesh.matrixWorld);
 
@@ -594,4 +783,55 @@ Missile.prototype.update = function() {
     this.drop -= 0.05;
     if (this.drop < 0) this.drop = 0;
     if (this.mesh) this.mesh.translateY(-this.drop);
+=======
+            var relTar1Offset = new THREE.Vector3(0,-10 * rotx * 4,40);
+            var Targ1Offset = relTar1Offset.applyMatrix4(rifter.matrixWorld);
+
+            targring1.position.x = Targ1Offset.x;
+            targring1.position.y = Targ1Offset.y;
+            targring1.position.z = Targ1Offset.z;
+            targring1.rotation.x = rifter.rotation.x;
+            targring1.rotation.y = rifter.rotation.y;
+            targring1.rotation.z = rifter.rotation.z;
+
+            var relTar2Offset = new THREE.Vector3(0,-20 * rotx * 8,100);
+            var Targ2Offset = relTar2Offset.applyMatrix4(rifter.matrixWorld);
+
+            targring2.position.x = Targ2Offset.x;
+            targring2.position.y = Targ2Offset.y;
+            targring2.position.z = Targ2Offset.z;
+            targring2.rotation.x = rifter.rotation.x;
+            targring2.rotation.y = rifter.rotation.y;
+            targring2.rotation.z = rifter.rotation.z;
+
+            //Create offsets for thrust glow
+
+            var relThrustOffset = new THREE.Vector3(0,0,0);
+            var ThrustOffset = relThrustOffset.applyMatrix4(rifter.matrixWorld);
+
+            thrustglow.position.x = ThrustOffset.x;
+            thrustglow.position.y = ThrustOffset.y;
+            thrustglow.position.z = ThrustOffset.z;
+            thrustglow.intensity = rifterspeed/3;
+            
+        //missiles again
+        
+            if(pressedspc == 1){
+                console.log(missiles);
+                console.log(rifter.position);
+                newMissile(rifter);
+                missiles.push(missile);
+                scene.add(missile);
+                console.log(missile);
+                pressedspc = 0;
+            }
+            
+            };
+            
+
+    function render() {
+    renderer.render(scene, camera);
+    };
+    
+>>>>>>> df2ab9fedfabb7e8901cac91a7203711ab78d3bd
 };
